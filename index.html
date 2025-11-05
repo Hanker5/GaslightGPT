@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GaslightGPT</title>
+  <script src="front-end.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>GaslightGPT</h1>
+    <p>Disclaimer: this site has no affiliation with Chat GPT or OpenAI. It is just a personal project to explore the behaviors and functionality of AI.</p>
+  </header>
+  <main>
+    <div id="chatbox">
+      <div id="messages"></div>
+      <div id="input-area">
+        <textarea id="input" type="text" placeholder="Type a message..."></textarea>
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

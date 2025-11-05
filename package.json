@@ -1,0 +1,31 @@
+{
+  "name": "gaslightgpt",
+  "version": "1.0.0",
+  "description": "A lightweight web application for experimenting with OpenAI's ChatGPT API integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "cd chatgpt-chat && npm start",
+    "install-server": "cd chatgpt-chat && npm install",
+    "setup": "npm run install-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/GaslightGPT.git"
+  },
+  "keywords": [
+    "chatgpt",
+    "openai",
+    "ai",
+    "chat",
+    "api",
+    "chatbot",
+    "gpt",
+    "conversation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/GaslightGPT/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/GaslightGPT#readme"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "chatgpt-chat",
+  "version": "1.0.0",
+  "description": "Backend server for GaslightGPT chat interface",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "openai": "^6.7.0"
+  },
+  "keywords": [
+    "openai",
+    "chatgpt",
+    "api",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT"
+}
