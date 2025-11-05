@@ -128,9 +128,13 @@ function startEditing(div) {
   autoResize(input);
   input.focus();
 
-  saveBtn.onclick = () => finishEditing(div, oldText, input.value);
+  saveBtn.onclick = (e) => {
+    e.stopPropagation();
+    finishEditing(div, oldText, input.value);
+  };
   input.addEventListener("keypress", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
+      e.stopPropagation();
       finishEditing(div, oldText, input.value);
     }
   });
@@ -138,7 +142,7 @@ function startEditing(div) {
 
 function finishEditing(div, oldText, newText) {
   div.classList.remove("editing");
-
+  
   // Render the new text as Markdown
   div.innerHTML = DOMPurify.sanitize(marked.parse(newText));
   div.dataset.originalText = newText;
