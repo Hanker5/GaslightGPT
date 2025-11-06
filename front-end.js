@@ -38,12 +38,42 @@ async function loadConfig() {
 // Start loading config immediately
 loadConfig();
 
+// Show typing indicator
+function showTypingIndicator() {
+  const typingDiv = document.createElement("div");
+  typingDiv.className = "typing-indicator";
+  typingDiv.id = "typing-indicator";
+
+  // Create three dots
+  for (let i = 0; i < 3; i++) {
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    typingDiv.appendChild(dot);
+  }
+
+  messagesDiv.appendChild(typingDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Remove typing indicator
+function removeTypingIndicator() {
+  const typingIndicator = document.getElementById("typing-indicator");
+  if (typingIndicator) {
+    typingIndicator.remove();
+  }
+}
+
 async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
   input.value = "";
 
+  // Disable send button and input while waiting
+  sendBtn.disabled = true;
+  input.disabled = true;
+
   appendMessage("user", text);
+  showTypingIndicator();
 
   try {
     // Ensure we have a base URL. If loadConfig hasn't finished yet, fall back to
@@ -66,16 +96,23 @@ async function sendMessage() {
       throw new Error(data.error);
     }
 
+    removeTypingIndicator();
     appendMessage("assistant", data.reply);
 
     chatHistory.push({ role: "user", content: text });
     chatHistory.push({ role: "assistant", content: data.reply });
   } catch (error) {
     console.error("Error sending message:", error);
+    removeTypingIndicator();
     appendMessage(
       "assistant",
       `❌ **Error:** ${error.message}\n\nPlease check:\n- Server is running\n- API key is configured\n- Internet connection is active`
     );
+  } finally {
+    // Re-enable send button and input
+    sendBtn.disabled = false;
+    input.disabled = false;
+    input.focus();
   }
 }
 
