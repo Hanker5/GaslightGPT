@@ -1,0 +1,11 @@
+# Local development server (not needed for Vercel deployment)
+server-dev.js
+
+# Development files
+.env.example
+.gitignore
+README.md
+
+# Editor files
+.vscode/
+.idea/
