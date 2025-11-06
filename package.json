@@ -2,11 +2,36 @@
   "name": "gaslightgpt",
   "version": "1.0.0",
   "description": "A lightweight web application for experimenting with OpenAI's ChatGPT API integration",
-  "main": "index.html",
+  "type": "module",
   "scripts": {
-    "start": "cd chatgpt-chat && npm start",
-    "install-server": "cd chatgpt-chat && npm install",
-    "setup": "npm run install-server"
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "node server-dev.js",
+    "dev:client": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "vercel-dev": "vercel dev"
+  },
+  "dependencies": {
+    "openai": "^6.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.400.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.4.0",
+    "class-variance-authority": "^0.7.0",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.3",
+    "tailwindcss": "^3.4.6",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "concurrently": "^8.2.2"
   },
   "repository": {
     "type": "git",

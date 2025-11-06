@@ -1,36 +1,30 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
 import OpenAI from "openai";
-import path from "path";
-
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Security headers
-app.use((req, res, next) => {
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("X-XSS-Protection", "1; mode=block");
-  next();
-});
-
-// Serve static files from project root (one level up from this server folder)
-const staticRoot = path.resolve(process.cwd(), "..");
-app.use(express.static(staticRoot));
-
-// Runtime config endpoint (returns non-sensitive runtime values)
-app.get("/config", (req, res) => {
-  res.json({ port: process.env.PORT || null });
-});
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-app.post("/api/chat", async (req, res) => {
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
+
+  // Handle preflight
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
+  // Only allow POST
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const { message, history } = req.body;
 
   // Input validation
@@ -62,13 +56,11 @@ app.post("/api/chat", async (req, res) => {
       ],
     });
 
-    res.json({
+    res.status(200).json({
       reply: response.choices[0].message.content,
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error contacting ChatGPT" });
   }
-});
-
-app.listen(process.env.PORT, () => console.log("Server running on http://localhost:" + process.env.PORT));
+}
