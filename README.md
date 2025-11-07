@@ -1,54 +1,96 @@
 # GaslightGPT
 
-A modern, polished web application for experimenting with OpenAI's ChatGPT API. Built with React, Vite, Tailwind CSS, and Shadcn/ui components for a premium user experience.
+A modern, type-safe ChatGPT web client with advanced message editing and chat history management. Built with React 18, TypeScript, Vite, Tailwind CSS, and Shadcn/ui components for a premium user experience.
 
 ## ✨ Features
 
-- ⚛️ Built with **React 18** + **Vite** for lightning-fast performance
-- 🎨 **Tailwind CSS** + **Shadcn/ui** for a polished, modern UI
-- 🌙 Beautiful dark theme with purple gradient accents
+- ⚛️ Built with **React 18** + **TypeScript** for type safety and reliability
+- 🎨 **Tailwind CSS** + **Shadcn/ui** + **Radix UI** for a polished, accessible UI
+- 🌙 Beautiful **light/dark theme** toggle with clean, modern design
 - 💬 Real-time chat with smooth typing indicators
+- 📚 **Chat history** with localStorage persistence
+- 🔄 **Multiple conversations** with sidebar navigation
+- ✏️ **Edit both user and assistant messages** inline
+- 🔥 **"Gaslit!" badges** on edited messages (toggle on/off)
 - 📋 One-click copy for any message
-- ✏️ Edit both user and assistant messages inline
-- 🗑️ Clear chat history with confirmation
+- 🗑️ Delete individual chats or clear all history
+- 🎯 **Keyboard shortcuts** (Cmd/Ctrl+K for new chat, Escape to close dialogs)
+- 🔔 **Toast notifications** for user actions
 - ☁️ **Vercel-ready** serverless deployment
 - 🔒 Secure API key handling (server-side only)
 - 📱 Fully responsive design
 
 ## 🏗️ Tech Stack
 
-- **Frontend**: React 18, Vite
-- **Styling**: Tailwind CSS, Shadcn/ui components
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Shadcn/ui components, Radix UI primitives
+- **UI Components**: Badge, Button, Card, Dialog, Input, Label, ScrollArea, Separator, Switch, Textarea
+- **Notifications**: Sonner (toast library)
 - **Markdown**: React Markdown with GitHub Flavored Markdown
-- **Backend**: Vercel Serverless Functions
+- **Backend**: Vercel Serverless Functions / Express (local dev)
 - **AI**: OpenAI API (GPT-4o-mini by default)
+- **Storage**: localStorage for chat history and preferences
 
 ## 📁 Project Structure
 
 ```
 GaslightGPT/
-├── api/                      # Vercel serverless functions
-│   └── chat.js              # ChatGPT API endpoint
+├── api/                          # Vercel serverless functions
+│   └── chat.js                   # ChatGPT API endpoint (production)
 ├── src/
-│   ├── components/          # React components
-│   │   ├── ui/             # Shadcn/ui components
-│   │   ├── Chat.jsx        # Main chat component
-│   │   ├── ChatMessage.jsx # Message display with copy/edit
-│   │   ├── ErrorBoundary.jsx # Error boundary
-│   │   └── TypingIndicator.jsx
+│   ├── components/               # React components
+│   │   ├── ui/                   # Shadcn/ui components
+│   │   │   ├── badge.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── scroll-area.tsx
+│   │   │   ├── separator.tsx
+│   │   │   ├── switch.tsx
+│   │   │   └── textarea.tsx
+│   │   ├── Chat.tsx              # Main chat component
+│   │   ├── ChatMessage.tsx       # Message display with copy/edit
+│   │   ├── ErrorBoundary.tsx     # Error boundary wrapper
+│   │   ├── Header.tsx            # Top navigation bar
+│   │   ├── Logo.tsx              # Logo wrapper component
+│   │   ├── LogoIcon.tsx          # SVG logo icon
+│   │   ├── SettingsDialog.tsx    # Settings modal
+│   │   ├── Sidebar.tsx           # Chat history sidebar
+│   │   └── TypingIndicator.tsx   # Loading animation
+│   ├── hooks/                    # Custom React hooks
+│   │   ├── index.ts
+│   │   ├── useAutoResize.ts      # Textarea auto-resize
+│   │   ├── useAutoScroll.ts      # Chat auto-scroll
+│   │   └── useLocalStorage.ts    # Generic localStorage hook
 │   ├── lib/
-│   │   └── utils.js        # Utility functions
-│   ├── App.jsx             # Root component
-│   ├── main.jsx            # Entry point
-│   └── index.css           # Global styles & Tailwind
+│   │   ├── chatStorage.ts        # Chat history management
+│   │   └── utils.ts              # Utility functions (cn)
+│   ├── types/                    # TypeScript definitions
+│   │   ├── api.ts                # API request/response types
+│   │   ├── chat.ts               # Chat and message types
+│   │   └── index.ts              # Type exports
+│   ├── App.tsx                   # Root component with state
+│   ├── main.tsx                  # Entry point
+│   └── index.css                 # Global styles & Tailwind
 ├── public/
-│   └── glgpt-logo.png      # Application logo
-├── index.html              # HTML entry point
-├── server-dev.js           # Local development API server
-├── vite.config.js          # Vite configuration
-├── tailwind.config.js      # Tailwind configuration
-├── vercel.json             # Vercel deployment config
-└── package.json            # Dependencies
+│   ├── favicon.ico               # Favicon (32x32)
+│   ├── favicon-16.png            # 16x16 favicon
+│   ├── favicon-32.png            # 32x32 favicon
+│   ├── favicon-48.png            # 48x48 favicon
+│   ├── favicon-192.png           # 192x192 PWA icon
+│   ├── favicon-512.png           # 512x512 PWA icon
+│   ├── apple-touch-icon.png      # iOS home screen icon (180x180)
+│   ├── logo.svg                  # Merged SVG logo
+│   └── manifest.json             # PWA manifest
+├── index.html                    # HTML entry point
+├── server-dev.js                 # Local development API server
+├── vite.config.js                # Vite configuration
+├── tsconfig.json                 # TypeScript configuration
+├── tailwind.config.js            # Tailwind configuration
+├── vercel.json                   # Vercel deployment config
+└── package.json                  # Dependencies
 ```
 
 ## Quick Start - Vercel Deployment (Recommended)
@@ -156,14 +198,35 @@ OPENAI_MODEL=gpt-4o-mini
 - `o1-preview`
 - `o1-mini`
 
-## Usage
+## 🎯 Usage
 
+### Basic Chat
 1. Type your message in the input box
 2. Press Enter or click "Send"
 3. Watch the typing indicator as the AI responds
-4. Click any message to edit it
-5. Use the copy button (📋) to copy messages
-6. Click "Clear Chat" to reset the conversation
+
+### Advanced Features
+- **Edit Messages**: Click any message to edit it inline, then save
+- **Copy Messages**: Click the copy button (📋) to copy message content
+- **New Chat**: Click the "+" button or press `Cmd/Ctrl+K`
+- **Chat History**: Click the hamburger menu to view past conversations
+- **Delete Chats**: Hover over a chat in the sidebar and click the trash icon
+- **Settings**: Click the gear icon to access theme toggle, clear chat options
+- **Theme Toggle**: Switch between light and dark mode in settings
+- **Gaslit Labels**: Toggle the "Gaslit!" badges on edited messages
+
+### Keyboard Shortcuts
+- `Cmd/Ctrl + K`: Start a new chat
+- `Escape`: Close settings dialog or sidebar (on mobile)
+
+## 🎨 Design Philosophy
+
+GaslightGPT follows a clean, modern design approach:
+- **No AI slop**: Removed excessive purple gradients, over-centered layouts, and stacked backdrop blurs
+- **Varied spacing**: Different border radii and padding for visual hierarchy
+- **Subtle shadows**: Single-layer shadows for depth without complexity
+- **Theme-aware**: Colors adapt to light/dark mode using CSS custom properties
+- **Accessibility**: Built on Radix UI primitives for keyboard navigation and screen readers
 
 ## Security
 
@@ -171,6 +234,7 @@ OPENAI_MODEL=gpt-4o-mini
 - `.env.example` contains placeholder names only
 - For Vercel: Add secrets in the dashboard under Environment Variables
 - API keys are only used server-side, never exposed to the client
+- Chat history is stored locally in browser localStorage only
 
 ## Troubleshooting
 
@@ -182,8 +246,8 @@ OPENAI_MODEL=gpt-4o-mini
 **Local Development:**
 - Ensure all dependencies are installed (`npm install`)
 - Check that your `.env` file exists and contains valid values
-- Verify ports 3001 (API) and 5173 (frontend) are not in use (`lsof -i :3001` on Mac/Linux)
-- If you see "EADDRINUSE" errors, another process is using the port - kill it first
+- Verify ports 3001 (API) and 5173 (frontend) are not in use
+- If you see "EADDRINUSE" errors, kill the process using the port
 - Check browser console for errors (F12 → Console tab)
 
 **API Errors:**
@@ -191,6 +255,11 @@ OPENAI_MODEL=gpt-4o-mini
 - Ensure you have API credits in your OpenAI account
 - Check if you're hitting rate limits
 - Try a different model if one isn't working
+
+**TypeScript Errors:**
+- Run `npm run build` to check for type errors
+- Ensure all `.tsx` files import types from `@/types`
+- Check that `tsconfig.json` is properly configured
 
 ## Contributing
 

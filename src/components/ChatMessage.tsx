@@ -2,15 +2,24 @@ import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Copy, Check, Edit2, Save, Flame } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Textarea } from './ui/textarea'
+import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
+import { Message } from '@/types'
 
-export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
+interface ChatMessageProps {
+  message: Message
+  onEdit: (messageId: number, newContent: string) => void
+  showGaslitLabel?: boolean
+}
+
+export function ChatMessage({ message, onEdit, showGaslitLabel = true }: ChatMessageProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(message.content)
   const [copied, setCopied] = useState(false)
-  const textareaRef = useRef(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const isUser = message.role === 'user'
 
@@ -26,12 +35,14 @@ export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(message.content)
     setCopied(true)
+    toast.success('Copied to clipboard')
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleSave = () => {
     if (editedContent.trim() && editedContent !== message.content) {
       onEdit(message.id, editedContent)
+      toast.success('Message updated')
     }
     setIsEditing(false)
   }
@@ -77,19 +88,19 @@ export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
 
       <div
         className={cn(
-          "rounded-2xl px-4 py-3 relative",
+          "rounded-lg px-4 py-3 relative",
           isEditing ? "w-full" : "max-w-[70%]",
           isUser
-            ? "bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/30"
+            ? "bg-primary text-primary-foreground shadow-sm"
             : "bg-secondary border border-border",
           isEditing && "ring-2 ring-primary"
         )}
       >
         {message.edited && !isEditing && showGaslitLabel && (
-          <div className="absolute -top-1 -right-1 flex items-center gap-1 bg-purple-600 rounded-full px-2 py-0.5 shadow-lg">
-            <Flame className="h-3 w-3 text-white" />
-            <span className="text-xs text-white font-medium">Gaslit!</span>
-          </div>
+          <Badge className="absolute -top-2 -right-2 bg-orange-500 dark:bg-orange-600 text-white border-none hover:bg-orange-500 shadow-sm gap-1">
+            <Flame className="h-3 w-3" />
+            Gaslit!
+          </Badge>
         )}
         {isEditing ? (
           <div className="space-y-3">
@@ -100,7 +111,7 @@ export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
               className={cn(
                 "min-h-[60px] resize-none overflow-hidden w-full",
                 isUser
-                  ? "bg-purple-500/20 text-white placeholder:text-purple-200/50 border-purple-400/30"
+                  ? "bg-primary/10 border-primary/30"
                   : "bg-background border-border"
               )}
               onKeyDown={(e) => {
@@ -114,7 +125,7 @@ export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
               <Button
                 size="sm"
                 onClick={handleSave}
-                className={isUser ? "bg-white text-purple-700 hover:bg-white/90" : ""}
+                className={isUser ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90" : ""}
               >
                 <Save className="h-4 w-4 mr-1" />
                 Save
@@ -126,7 +137,7 @@ export function ChatMessage({ message, onEdit, showGaslitLabel = true }) {
                   setIsEditing(false)
                   setEditedContent(message.content)
                 }}
-                className={isUser ? "border-white/30 text-white hover:bg-white/10" : ""}
+                className={isUser ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}
               >
                 Cancel
               </Button>

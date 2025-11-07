@@ -12,26 +12,36 @@
     "vercel-dev": "vercel dev"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "lucide-react": "^0.400.0",
     "openai": "^6.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "lucide-react": "^0.400.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.4.0",
-    "class-variance-authority": "^0.7.0",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
-    "express": "^5.1.0",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3"
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.3.3",
-    "tailwindcss": "^3.4.6",
     "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
     "postcss": "^8.4.39",
-    "concurrently": "^8.2.2"
+    "tailwindcss": "^3.4.6",
+    "typescript": "^5.9.3",
+    "vite": "^5.3.3"
   },
   "repository": {
     "type": "git",
