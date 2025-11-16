@@ -6,7 +6,9 @@ node_modules/
 .env
 .env.local
 .env.*.local
-chatgpt-chat/.env
+
+# Vercel
+.vercel
 
 # Logs
 logs
@@ -41,6 +43,9 @@ Desktop.ini
 dist/
 build/
 *.tgz
+
+# Vite
+.vite
 
 # Temporary files
 tmp/

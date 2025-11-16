@@ -3,25 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+
   <title>GaslightGPT</title>
-  <script src="front-end.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>GaslightGPT</h1>
-    <p>Disclaimer: this site has no affiliation with Chat GPT or OpenAI. It is just a personal project to explore the behaviors and functionality of AI.</p>
-  </header>
-  <main>
-    <div id="chatbox">
-      <div id="messages"></div>
-      <div id="input-area">
-        <textarea id="input" type="text" placeholder="Type a message..."></textarea>
-        <button id="send">Send</button>
-      </div>
-    </div>
-  </main>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
