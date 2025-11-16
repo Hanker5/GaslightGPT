@@ -9,13 +9,22 @@ import { Button } from './ui/button'
 import { Switch } from './ui/switch'
 import { Separator } from './ui/separator'
 import { Label } from './ui/label'
-import { Flame, Sun, Moon, Trash2 } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import { Flame, Trash2, Palette } from 'lucide-react'
+import { ThemeName } from '@/types'
+import { themes } from '@/lib/themes'
 
 interface SettingsDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  theme: 'light' | 'dark'
-  onToggleTheme: () => void
+  theme: ThemeName
+  onThemeChange: (theme: ThemeName) => void
   showGaslitLabels: boolean
   onToggleGaslitLabels: () => void
   onClearChat: () => void
@@ -26,7 +35,7 @@ export function SettingsDialog({
   open,
   onOpenChange,
   theme,
-  onToggleTheme,
+  onThemeChange,
   showGaslitLabels,
   onToggleGaslitLabels,
   onClearChat,
@@ -44,34 +53,33 @@ export function SettingsDialog({
 
         <div className="space-y-6 py-4">
           {/* Theme Setting */}
-          <div className="flex items-center justify-between">
+          <div className="space-y-3">
             <div className="space-y-0.5">
-              <Label htmlFor="theme-switch" className="text-base">
+              <Label htmlFor="theme-select" className="text-base flex items-center gap-2">
+                <Palette className="h-4 w-4" />
                 Theme
               </Label>
               <p className="text-sm text-muted-foreground">
-                {theme === 'dark' ? 'Dark' : 'Light'} mode
+                Choose your preferred color theme
               </p>
             </div>
-            <Button
-              id="theme-switch"
-              variant="outline"
-              size="sm"
-              onClick={onToggleTheme}
-              className="gap-2"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Moon className="h-4 w-4" />
-                  Dark
-                </>
-              ) : (
-                <>
-                  <Sun className="h-4 w-4" />
-                  Light
-                </>
-              )}
-            </Button>
+            <Select value={theme} onValueChange={onThemeChange}>
+              <SelectTrigger id="theme-select">
+                <SelectValue placeholder="Select a theme" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(themes).map((themeOption) => (
+                  <SelectItem key={themeOption.name} value={themeOption.name}>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{themeOption.displayName}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {themeOption.description}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <Separator />

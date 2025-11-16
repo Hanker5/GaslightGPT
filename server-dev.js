@@ -9,9 +9,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const client = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+// Initialize client lazily to avoid crashes when API key is missing
+let client = null;
+
+function getClient() {
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY environment variable is not set');
+  }
+  if (!client) {
+    client = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
+  }
+  return client;
+}
 
 app.post('/api/chat', async (req, res) => {
   const { message, history } = req.body;
@@ -21,9 +32,10 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
+    const apiClient = getClient();
     const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
-    const response = await client.chat.completions.create({
+    const response = await apiClient.chat.completions.create({
       model: model,
       messages: [
         ...(history || []),
@@ -36,7 +48,11 @@ app.post('/api/chat', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error contacting Groq' });
+    if (err.message.includes('GROQ_API_KEY')) {
+      res.status(500).json({ error: 'GROQ_API_KEY is not configured. Please add it to your .env file.' });
+    } else {
+      res.status(500).json({ error: 'Error contacting Groq' });
+    }
   }
 });
 
