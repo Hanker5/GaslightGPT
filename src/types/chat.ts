@@ -16,13 +16,32 @@ export interface Message {
  * Settings for the application
  */
 export interface Settings {
-  /** API key for OpenAI */
+  /** API provider to use */
+  apiProvider: ApiProvider
+  /** API key for the selected provider */
   apiKey: string
   /** Model to use for chat completions */
   model: string
   /** Theme preference */
-  theme: 'light' | 'dark' | 'system'
+  theme: ThemeName
+  /** Show "Gaslit!" labels on edited messages */
+  showGaslitLabels: boolean
 }
+
+/**
+ * Available API providers
+ */
+export type ApiProvider = 'groq' | 'openrouter' | 'together' | 'openai'
+
+/**
+ * Available theme names
+ */
+export type ThemeName =
+  | 'default-dark'
+  | 'default-light'
+  | 'midnight-galaxy'
+  | 'ocean-breeze'
+  | 'sunset-glow'
 
 /**
  * Conversation data structure for storage

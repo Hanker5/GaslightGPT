@@ -135,22 +135,22 @@ export function clearAllChats(): boolean {
 
 /**
  * Get theme preference from localStorage
- * @returns 'light' or 'dark'
+ * @returns Theme name or default theme
  */
-export function getTheme(): 'light' | 'dark' {
+export function getTheme(): string {
   try {
     const theme = localStorage.getItem(THEME_KEY)
-    return (theme === 'light' || theme === 'dark') ? theme : 'dark'
+    return theme || 'default-dark'
   } catch (error) {
-    return 'dark'
+    return 'default-dark'
   }
 }
 
 /**
  * Save theme preference to localStorage
- * @param theme - 'light' or 'dark'
+ * @param theme - Theme name to save
  */
-export function setTheme(theme: 'light' | 'dark'): boolean {
+export function setTheme(theme: string): boolean {
   try {
     localStorage.setItem(THEME_KEY, theme)
     return true
