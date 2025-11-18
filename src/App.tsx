@@ -4,6 +4,7 @@ import { Chat } from './components/Chat'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import { SettingsDialog } from './components/SettingsDialog'
+import { AboutDialog } from './components/AboutDialog'
 import { Message, Conversation, ApiProvider, ThemeName } from './types'
 import {
   getAllChats,
@@ -28,6 +29,7 @@ import { applyTheme } from './lib/themes'
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
   const [theme, setTheme] = useState<ThemeName>(getTheme() as ThemeName)
   const [chatHistory, setChatHistory] = useState<Conversation[]>([])
   const [currentChatId, setCurrentChat] = useState<string | null>(null)
@@ -91,15 +93,16 @@ function App() {
         e.preventDefault()
         handleNewChat()
       }
-      // Escape: Close settings dialog
-      if (e.key === 'Escape' && settingsOpen) {
-        setSettingsOpen(false)
+      // Escape: Close dialogs
+      if (e.key === 'Escape') {
+        if (settingsOpen) setSettingsOpen(false)
+        if (aboutOpen) setAboutOpen(false)
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [settingsOpen])
+  }, [settingsOpen, aboutOpen])
 
   const handleNewChat = () => {
     const newChatId = String(Date.now())
@@ -216,6 +219,11 @@ function App() {
         model={model}
         onModelChange={handleModelChange}
       />
+      <AboutDialog
+        open={aboutOpen}
+        onOpenChange={setAboutOpen}
+        theme={theme}
+      />
       <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
         <Sidebar
@@ -225,6 +233,7 @@ function App() {
           onSelectChat={handleSelectChat}
           onDeleteChat={handleDeleteChat}
           onOpenSettings={() => setSettingsOpen(true)}
+          onOpenAbout={() => setAboutOpen(true)}
           chatHistory={chatHistory}
           currentChatId={currentChatId}
         />
