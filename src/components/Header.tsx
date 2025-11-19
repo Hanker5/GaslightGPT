@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button'
-import { Menu } from 'lucide-react'
+import { Menu, Share2 } from 'lucide-react'
 import Logo from './Logo'
 
 interface HeaderProps {
   onToggleSidebar: () => void
+  onShare?: () => void           // NEW: Optional share handler
+  canShare?: boolean              // NEW: Whether sharing is enabled
 }
 
-export default function Header({ onToggleSidebar }: HeaderProps) {
+export default function Header({ onToggleSidebar, onShare, canShare = false }: HeaderProps) {
   return (
     <header className="border-b border-border/50 bg-background/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-3">
@@ -36,8 +38,23 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             </p>
           </div>
 
-          {/* Spacer for mobile to keep disclaimer centered */}
-          <div className="w-10 lg:hidden" />
+          {/* Share Button - NEW */}
+          {onShare && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onShare}
+              disabled={!canShare}
+              className="gap-2"
+              title={canShare ? 'Share this conversation' : 'Start a conversation to share'}
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Share</span>
+            </Button>
+          )}
+
+          {/* Spacer for mobile when no share button */}
+          {!onShare && <div className="w-10 lg:hidden" />}
         </div>
       </div>
     </header>

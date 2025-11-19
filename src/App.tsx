@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 import { Chat } from './components/Chat'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import { SettingsDialog } from './components/SettingsDialog'
+import ShareDialog from './components/ShareDialog'
+import SharedChatView from './components/SharedChatView'
 import { Message, Conversation, ApiProvider, ThemeName } from './types'
 import {
   getAllChats,
@@ -28,6 +31,7 @@ import { applyTheme } from './lib/themes'
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)  // NEW
   const [theme, setTheme] = useState<ThemeName>(getTheme() as ThemeName)
   const [chatHistory, setChatHistory] = useState<Conversation[]>([])
   const [currentChatId, setCurrentChat] = useState<string | null>(null)
@@ -193,6 +197,24 @@ function App() {
     saveModel(newModel)
   }
 
+  const handleShare = () => {
+    setShareDialogOpen(true)
+  }
+
+  // Get current conversation for sharing
+  const currentConversation = currentChatId && messages.length > 0
+    ? {
+        id: currentChatId,
+        title: generateChatTitle(messages),
+        messages,
+        createdAt: getChatById(currentChatId)?.createdAt || Date.now(),
+        updatedAt: Date.now()
+      }
+    : null
+
+  // Can share if we have messages
+  const canShare = messages.length > 0
+
   return (
     <>
       <Toaster
@@ -200,48 +222,72 @@ function App() {
         theme={theme === 'default-light' ? 'light' : 'dark'}
         richColors
       />
-      <SettingsDialog
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-        theme={theme}
-        onThemeChange={handleThemeChange}
-        showGaslitLabels={showGaslitLabels}
-        onToggleGaslitLabels={() => setShowGaslitLabels(!showGaslitLabels)}
-        onClearChat={handleClearChat}
-        onClearAllChats={handleClearAllChats}
-        apiProvider={apiProvider}
-        onApiProviderChange={handleApiProviderChange}
-        apiKey={apiKey}
-        onApiKeyChange={handleApiKeyChange}
-        model={model}
-        onModelChange={handleModelChange}
-      />
-      <div className="flex h-screen overflow-hidden">
-        {/* Sidebar */}
-        <Sidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          onNewChat={handleNewChat}
-          onSelectChat={handleSelectChat}
-          onDeleteChat={handleDeleteChat}
-          onOpenSettings={() => setSettingsOpen(true)}
-          chatHistory={chatHistory}
-          currentChatId={currentChatId}
+
+      {/* React Router Routes */}
+      <Routes>
+        {/* Main chat interface route */}
+        <Route
+          path="/"
+          element={
+            <>
+              <SettingsDialog
+                open={settingsOpen}
+                onOpenChange={setSettingsOpen}
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                showGaslitLabels={showGaslitLabels}
+                onToggleGaslitLabels={() => setShowGaslitLabels(!showGaslitLabels)}
+                onClearChat={handleClearChat}
+                onClearAllChats={handleClearAllChats}
+                apiProvider={apiProvider}
+                onApiProviderChange={handleApiProviderChange}
+                apiKey={apiKey}
+                onApiKeyChange={handleApiKeyChange}
+                model={model}
+                onModelChange={handleModelChange}
+              />
+              <ShareDialog
+                open={shareDialogOpen}
+                onOpenChange={setShareDialogOpen}
+                conversation={currentConversation}
+              />
+              <div className="flex h-screen overflow-hidden">
+                {/* Sidebar */}
+                <Sidebar
+                  isOpen={sidebarOpen}
+                  onClose={() => setSidebarOpen(false)}
+                  onNewChat={handleNewChat}
+                  onSelectChat={handleSelectChat}
+                  onDeleteChat={handleDeleteChat}
+                  onOpenSettings={() => setSettingsOpen(true)}
+                  chatHistory={chatHistory}
+                  currentChatId={currentChatId}
+                />
+
+                {/* Main Content */}
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <Header
+                    onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                    onShare={handleShare}
+                    canShare={canShare}
+                  />
+                  <Chat
+                    messages={messages}
+                    onMessagesUpdate={handleMessagesUpdate}
+                    showGaslitLabels={showGaslitLabels}
+                    apiProvider={apiProvider}
+                    apiKey={apiKey}
+                    model={model}
+                  />
+                </div>
+              </div>
+            </>
+          }
         />
 
-        {/* Main Content */}
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-          <Chat
-            messages={messages}
-            onMessagesUpdate={handleMessagesUpdate}
-            showGaslitLabels={showGaslitLabels}
-            apiProvider={apiProvider}
-            apiKey={apiKey}
-            model={model}
-          />
-        </div>
-      </div>
+        {/* Shared chat view route */}
+        <Route path="/share/:shareId" element={<SharedChatView />} />
+      </Routes>
     </>
   )
 }
