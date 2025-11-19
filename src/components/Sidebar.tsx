@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Trash2,
   Settings,
+  Info,
   X
 } from 'lucide-react'
 import { Conversation } from '@/types'
@@ -18,6 +19,7 @@ interface SidebarProps {
   onSelectChat: (chatId: string) => void
   onDeleteChat: (chatId: string) => void
   onOpenSettings: () => void
+  onOpenAbout: () => void
   chatHistory?: Conversation[]
   currentChatId: string | null
 }
@@ -29,6 +31,7 @@ export default function Sidebar({
   onSelectChat,
   onDeleteChat,
   onOpenSettings,
+  onOpenAbout,
   chatHistory = [],
   currentChatId,
 }: SidebarProps) {
@@ -143,6 +146,18 @@ export default function Sidebar({
               <span className="text-sm font-medium">Buy Me a Coffee</span>
             </Button>
           </a>
+        </div>
+
+        {/* About Button */}
+        <div className="border-t border-border">
+          <Button
+            variant="ghost"
+            onClick={onOpenAbout}
+            className="w-full justify-start gap-2 px-4 py-3 h-auto rounded-none"
+          >
+            <Info className="h-5 w-5" />
+            <span className="text-sm font-medium">About</span>
+          </Button>
         </div>
 
         {/* Settings Button */}
