@@ -214,11 +214,17 @@ export async function getSharedChat(
 
   try {
     // ===== SEND HTTP REQUEST =====
-    // GET /api/share/:shareId
+    // Development (server-dev.ts): GET /api/share/:shareId (path parameter)
+    // Production (Vercel): GET /api/share?shareId=xxx (query parameter)
     // - Method: GET (reading resource)
     // - No body needed (GET requests don't have bodies)
-    // - ShareId in URL path
-    const response = await fetch(`${API_BASE_URL}/api/share/${shareId}`)
+
+    const isDevelopment = typeof import.meta.env !== 'undefined' && import.meta.env.DEV
+    const url = isDevelopment
+      ? `${API_BASE_URL}/api/share/${shareId}` // Dev: path parameter
+      : `${API_BASE_URL}/api/share?shareId=${shareId}` // Production: query parameter
+
+    const response = await fetch(url)
 
     console.log(`[shareApi] Response status: ${response.status}`)
 
